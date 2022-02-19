@@ -1,208 +1,210 @@
-<div class="mt-4 mb-5"> 
-    <div class="mt-4 mb-5">
-        <ul class="nav nav-pills justify-content-center">
-            <li>
-                <button type="button" class="btn btn-primary" aria-current="page" 
-                    (click)="changeTab(true)" style="margin-right: 20px;">Find by District</button>
-            </li>
-            <li>
-                <button id="find_by_pin_anchor" class="btn btn-primary" (click)="changeTab(false)">Find
-                    by PIN</button>
-            </li>
-        </ul>
-    </div>
+<body>
+   <div class="container my-5">
+        <h3 class="text-center mb-5">Search Your Nearest Vaccination Center</h3>
+            <div class="w-50 mx-auto mb-5">
+                <div class="mt-4 mb-5">
+                    <ul class="nav nav-pills justify-content-center">
+                        <li class="nav-item">
+                            <button class="btn btn-outline-primary" id="btn" [ngClass]="{'nav-link active':changeField}" aria-current="page" 
+                                (click)="changeTab(true)" style="margin-right: 30px;" >Find by District</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-primary me-2" id="btn" aria-current="page" [ngClass]="{'nav-link active':!changeField}" (click)="changeTab(false)" style="margin-right: 20px;">Find
+                                by PIN</button>
+                        </li>
+                    </ul>
+                </div>
 
-<div *ngIf="changeField; else elseblock" class="row" id="find_by_dist">
-    <div class="col">
-        <div class="form-group">
-            <select name="" id="" class="form-control" (change)="getStateId($event)">
-                <option value="">Select state</option>
-                <option  *ngFor="let state of statesArray.states" [value]="state.state_id">{{state.state_name}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="col">
-        <div class="form-group">
-            <select name="" id="" class="form-control" (change)="getDistrictId($event)">
-                <option value="">Select District</option >
-                <option  *ngFor="let district of districtArray.districts" [value]="district.district_id">{{district.district_name}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="col-auto">
-        <button class="btn btn-info" (click)="getAllData()">Search</button>
-    </div>
-</div>
-
-<ng-template #elseblock>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <input type="text" #pin id="pin"placeholder="Enter your PIN" class="form-control" >
+                <div *ngIf="changeField; else elseblock" class="row" id="find_by_dist">
+                    <div class="col">
+                        <div class="form-group">
+                            <select name="" id="" class="form-control" (change)="getStateId($event)">
+                                <option value="">Select state</option>
+                                <option  *ngFor="let state of statesArray.states" [value]="state.state_id">{{state.state_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <select name="" id="" class="form-control" (change)="getDistrictId($event)">
+                                <option value="">Select District</option >
+                                <option  *ngFor="let district of districtArray.districts" [value]="district.district_id">{{district.district_name}}</option>
+                            </select>
+                        </div>
+                    </div>       
+                    <div class="col-auto">
+                        <button class="btn btn-info" (click)="getAllData()">Search</button>
+                    </div>
+                </div>
+        
+                <ng-template #elseblock>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <input type="text" #pin id="pin"placeholder="Enter your PIN" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-info" (click)="getPin(pin.value)">Search</button>
+                        </div>
+                    </div>
+                </ng-template>
             </div>
-        </div>
-        <div class="col-auto">
-            <button class="btn btn-info" (click)="getPin(pin.value)">Search</button>
-        </div>
-    </div>
-</ng-template>
-</div>
-
-
-<div class="card">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-3 text-end pt-2">
-                <a href="javascript:;" class="text-decoration-none text-secondary" (click)="previousDate()">
-                    <h2>&#x3008;</h2>
-                </a>
-            </div>
-            <div class="col" *ngFor="let date of dateArray" >
-                <div class="card my-2" >
-                    <div class="card-body py-1 my-1" >
-                        <strong>
-                            <small >{{date | date:'ccc,d MMM'}}</small>
-                        </strong>
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-3 text-end pt-2">
+                        <a href="javascript:;" class="text-decoration-none text-secondary" (click)="previousDate()">
+                            <h2>&#x3008;</h2>
+                        </a>
+                    </div>
+                    <div class="col" *ngFor="let date of dateArray" >
+                        <div class="card my-2" >
+                            <div class="card-body py-1 my-1" >
+                                <strong>
+                                    <small >{{date | date:'ccc,d MMM'}}</small>
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto pt-2">
+                        <a href="javascript:;" class="text-decoration-none text-secondary" (click)="nextDate()">
+                            <h2>&#12297;</h2>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="col-auto pt-2">
-                <a href="javascript:;" class="text-decoration-none text-secondary" (click)="nextDate()">
-                    <h2>&#12297;</h2>
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="card-body" *ngFor="let slot of districtData | paginate: {itemsPerPage : dataCount, currentPage:page}">
-        <div class="row py-3 border-bottom" >
-            <div class="col-3">
-                <div class="text-primary">{{slot.name}}</div>
-                <div class="text-muted">
-                    <small>{{slot.address}}, {{slot.district_name}}, {{slot.state_name}}, {{slot.pincode}}</small>
-                </div>
-                <div>
-                    <span class="me-1">{{slot.vaccine}}</span>
-                    <ng-container *ngIf="slot.fee_type === 'Free'; else first">
-                        <span class="badge bg-success">{{slot.fee_type}}</span>
-                    </ng-container>
-                    <ng-template #first>
-                        <ng-container *ngIf="slot.fee_type === 'Paid'; else second">
-                            <span class="badge bg-warning" >{{slot.fee_type}}</span>
-                        </ng-container>
-                    </ng-template>
-                    <ng-template #second>
-                        <ng-container *ngIf="slot.available_capacity_dose1 === '0' && slot.available_capacity_dose2 === '0'">
-                            <span class="badge bg-danger" >{{slot.fee_type}}</span>
-                        </ng-container>
-                        
-                    </ng-template>
-                </div>
-                <small class="d-block">
-                    <span class="text-primary me-3"></span>
-                    <ng-container *ngIf="slot.available_capacity_dose1 > 0 && slot.available_capacity_dose2 ===0; else dose2">
-                        <span>Dose: #1</span>
-                    </ng-container>
+            <div class="card-body" *ngFor="let slot of districtData | paginate: {itemsPerPage : dataCount, currentPage:page}">
+                <div class="row py-3 border-bottom" >
+                    <div class="col-3">
+                        <div class="text-primary">{{slot.name}}</div>
+                        <div class="text-muted">
+                            <small>{{slot.address}}, {{slot.district_name}}, {{slot.state_name}}, {{slot.pincode}}</small>
+                        </div>
+                        <div>
+                            <span class="me-1">{{slot.vaccine}}</span>
+                            <ng-container *ngIf="slot.fee_type === 'Free'; else first">
+                                <span class="badge bg-success">{{slot.fee_type}}</span>
+                            </ng-container>
+                            <ng-template #first>
+                                <ng-container *ngIf="slot.fee_type === 'Paid'; else second">
+                                    <span class="badge bg-warning" >{{slot.fee_type}}</span>
+                                </ng-container>
+                            </ng-template>
+                            <ng-template #second>
+                                <ng-container *ngIf="slot.available_capacity_dose1 === '0' && slot.available_capacity_dose2 === '0'">
+                                    <span class="badge bg-danger" >{{slot.fee_type}}</span>
+                                </ng-container>                              
+                            </ng-template>
+                        </div>
+                        <small class="d-block">
+                            <span class="text-primary me-3"></span>
+                            <ng-container *ngIf="slot.available_capacity_dose1 > 0 && slot.available_capacity_dose2 ===0; else dose2">
+                                <span>Dose: #1</span>
+                            </ng-container>
+                            
+                            <ng-template #dose2>
+                                <ng-container *ngIf="slot.available_capacity_dose1 === 0 && slot.available_capacity_dose2 > 0; else dose3">
+                                    <span>Dose: #2</span>
+                                </ng-container>
+                            </ng-template>
+        
+        
+                            <ng-template #dose3>
+                                <ng-container *ngIf="slot.available_capacity_dose1 > 0 && slot.available_capacity_dose2 > 0; else pre">
+                                    <span>Dose: #1 & Dose: #2</span>
+                                </ng-container>
+                            </ng-template>
+        
+        
+                            <ng-template #pre>
+                                    <span>Precaution</span>
+                            </ng-template>
+                        </small>
+                    </div>
                     
-                    <ng-template #dose2>
-                        <ng-container *ngIf="slot.available_capacity_dose1 === 0 && slot.available_capacity_dose2 > 0; else dose3">
-                            <span>Dose: #2</span>
-                        </ng-container>
-                    </ng-template>
-
-
-                    <ng-template #dose3>
-                        <ng-container *ngIf="slot.available_capacity_dose1 > 0 && slot.available_capacity_dose2 > 0; else pre">
-                            <span>Dose: #1 & Dose: #2</span>
-                        </ng-container>
-                    </ng-template>
-
-
-                    <ng-template #pre>
-                            <span>Precaution</span>
-                    </ng-template>
-                </small>
-            </div>
-            <div class="col" >
-                <div class="card h-100" >
-                    <div class="card-body d-table">
-                        <div class="d-table-cell h-100 align-middle text-center" >
-                            <ng-container *ngIf="slot.available_capacity>10 ; else elseblock">
-                                <strong class="text-success">{{slot.available_capacity}} Slots</strong>
-                            </ng-container>
-                            <ng-template #elseblock>
-                                <ng-container *ngIf="slot.available_capacity<=10 && slot.available_capacity!=0; else booked">
-                                    <strong class="text-warning">{{slot.available_capacity}} Slots</strong>
-                                </ng-container>
-                            </ng-template>
-                            <ng-template #booked>
-                                <strong class="text-danger">booked</strong>
-                            </ng-template>
+                    <div class="col" >
+                        <div class="card h-100">
+                            <div class="card-body d-table">
+                                <div class="d-table-cell h-100 align-middle text-center">
+                                    <div *ngFor="let data of data1.sessions; let i=index">
+                                        {{i}}
+                                        <ng-container *ngIf="slot.center_id === data.center_id && slot.vaccine === data.vaccine">
+                                            <ng-container *ngIf="data.available_capacity>10 ; else elseblock">
+                                                <strong class="text-success">{{data.available_capacity}} Slots</strong>
+                                            </ng-container>
+                                            <ng-template #elseblock>
+                                                <ng-container *ngIf="data.available_capacity<=10 && data.available_capacity!=0; else booked">
+                                                    <strong class="text-warning">{{data.available_capacity}} Slots</strong>
+                                                </ng-container>
+                                            </ng-template>
+                                            <ng-template #booked>
+                                                <ng-container *ngIf="data.available_capacity === 0">
+                                                    <strong class="text-danger">booked</strong>
+                                                </ng-container>
+                                            </ng-template>
+                                        </ng-container>
+                                    </div>             
+                                    
+                                    <ng-template #NA>
+                                        <strong class="text-muted">N/A</strong>
+                                    </ng-template> 
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col" >
-                <div class="card h-100">
-                    <div class="card-body d-table">
-                        <div class="d-table-cell h-100 align-middle text-center">
-                            <div *ngFor="let dat of data2.sessions; let i=index">
-                         <ng-container *ngIf="slot.center_id === dat.center_id && slot.vaccine === dat.vaccine">
-
-                            <ng-container *ngIf="dat.available_capacity>10 ; else elseblock">
-                                <strong class="text-success">{{dat.available_capacity}} Slots</strong>
-                            </ng-container>
-                            <ng-template #elseblock>
-                                <ng-container *ngIf="dat.available_capacity<=10 && dat.available_capacity!=0; else booked">
-                                    <strong class="text-warning">{{dat.available_capacity}} Slots</strong>
-                                </ng-container>
-                            </ng-template>
-                            <ng-template #booked>
-                                <strong class="text-danger">booked</strong>
-                            </ng-template>
-                         </ng-container>
-                         </div>
-                            
+                    <div class="col" >
+                        <div class="card h-100">
+                            <div class="card-body d-table">
+                                <div class="d-table-cell h-100 align-middle text-center">
+                                    <div *ngFor="let data of data2.sessions; let i=index">
+                                        <ng-container *ngIf="slot.center_id === data.center_id && slot.vaccine === data.vaccine">
+                                            <ng-container *ngIf="data.available_capacity>10 ; else elseblock">
+                                                <strong class="text-success">{{data.available_capacity}} Slots</strong>
+                                            </ng-container>
+                                            <ng-template #elseblock>
+                                                <ng-container *ngIf="data.available_capacity<=10 && data.available_capacity!=0; else booked">
+                                                    <strong class="text-warning">{{data.available_capacity}} Slots</strong>
+                                                </ng-container>
+                                            </ng-template>
+                                            <ng-template #booked>
+                                                <ng-container *ngIf="data.available_capacity === 0">
+                                                    <strong class="text-danger">booked</strong>
+                                                </ng-container>
+                                            </ng-template>
+                                        </ng-container>
+                                    </div>              
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="col" >
+                        <div class="card h-100">
+                            <div class="card-body d-table">
+                                <div class="d-table-cell h-100 align-middle text-center">
+                                    <div *ngFor="let data of data3.sessions; let i=index">
+                                        <ng-container *ngIf="slot.center_id === data.center_id && slot.vaccine === data.vaccine">
+                                            <ng-container *ngIf="data.available_capacity>10 ; else elseblock">
+                                                <strong class="text-success">{{data.available_capacity}} Slots</strong>
+                                            </ng-container>
+                                            <ng-template #elseblock>
+                                                <ng-container *ngIf="data.available_capacity<=10 && data.available_capacity!=0; else booked">
+                                                    <strong class="text-warning">{{data.available_capacity}} Slots</strong>
+                                                </ng-container>
+                                            </ng-template>
+                                                <ng-template #booked>
+                                                    <strong class="text-danger">booked</strong>
+                                                </ng-template>
+                                        </ng-container>
+                                    </div>              
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
                 </div>
             </div>
-            <!-- <div class="col">
-                <div class="card h-100">
-                    <div class="card-body d-table">
-                        <div class="d-table-cell h-100 align-middle text-center">
-                            <strong class="text-muted">N/A</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-            <div class="col" >
-                <div class="card h-100">
-                    <div class="card-body d-table">
-                        <div class="d-table-cell h-100 align-middle text-center">
-                            <div *ngFor="let dat of data3.sessions; let i=index">
-                         <ng-container *ngIf="slot.center_id === dat.center_id && slot.vaccine === dat.vaccine">
-
-                            <ng-container *ngIf="dat.available_capacity>10 ; else elseblock">
-                                <strong class="text-success">{{dat.available_capacity}} Slots</strong>
-                            </ng-container>
-                            <ng-template #elseblock>
-                                <ng-container *ngIf="dat.available_capacity<=10 && dat.available_capacity!=0; else booked">
-                                    <strong class="text-warning">{{dat.available_capacity}} Slots</strong>
-                                </ng-container>
-                            </ng-template>
-                            <ng-template #booked>
-                                <strong class="text-danger">booked</strong>
-                            </ng-template>
-                         </ng-container>
-                         </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-             
-             
         </div>
-    </div>
-    
-</div>        
+   </div>
+</body>
+
+       
